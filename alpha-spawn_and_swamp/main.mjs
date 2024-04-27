@@ -19,20 +19,22 @@ export function loop() {
 
     // console.log(my_harvests)
     var mySpawn = getObjectsByPrototype(StructureSpawn).filter(s=>s.my)[0];
-    // 生产creeps harvest
+    // 生产
     if(my_harvests.length<3){
         var hc=mySpawn.spawnCreep([CARRY,MOVE]).object
         if(hc){
             console.log(hc)
             hc.zhiye = 'harvester'
         }
-    }else if(my_zhanshi.length<9){
-        var attacker = mySpawn.spawnCreep([MOVE,MOVE,MOVE,ATTACK]).object
+    }
+     if(my_zhanshi.length<1){
+        var attacker = mySpawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK]).object
         if(attacker){
             attacker.zhiye = 'zhanshi'
         }
-    }else{
-        var attacker = mySpawn.spawnCreep([MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK]).object
+    }
+    {
+        var attacker = mySpawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK]).object
         if(attacker){
             attacker.zhiye = 'zhanshi'
         }

@@ -17,16 +17,6 @@ export function loop() {
     var my_harvests = myCreeps.filter(creep => creep.zhiye == 'harvester');
     var my_zhanshi = myCreeps.filter(creep => creep.zhiye == 'zhanshi');
     // 所有战士都应该有自己的队伍，找到所有的队伍
-    var teams = [];
-    var remain_zhanshi = my_zhanshi.length;
-    for (let i=1;i<99;i++){
-        teams[i] = myCreeps.filter(creep=>creep.team == i)
-        remain_zhanshi = remain_zhanshi - teams[i].length
-        if(remain_zhanshi<=0){
-            break;
-        }
-    }
-
     // console.log(my_harvests)
     var mySpawn = getObjectsByPrototype(StructureSpawn).find(s=>s.my);
     // 生产
@@ -35,9 +25,11 @@ export function loop() {
         if(hc){
             hc.zhiye = 'harvester'
         }
-    }else{  // 生产战士，以team为单位，每个队伍4个战士
-        for(let i=1;i<=teams.length;i++){
-            
+    }else{  // 生产战士
+        var yx = mySpawn.spawnCreep([WORK,WORK,CARRY,MOVE,MOVE]).object
+        if(yx){
+            yx.zhiye = 'zhanshi'
+            yx.bingzhong = 'youxia'
         }
     }
     // console.log('line 31')

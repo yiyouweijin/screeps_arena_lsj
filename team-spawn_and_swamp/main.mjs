@@ -16,25 +16,28 @@ export function loop() {
     var myCreeps = getObjectsByPrototype(Creep).filter(creep => creep.my);
     var my_harvests = myCreeps.filter(creep => creep.zhiye == 'harvester');
     var my_zhanshi = myCreeps.filter(creep => creep.zhiye == 'zhanshi');
+    // 所有战士都应该有自己的队伍，找到所有的队伍
+    var teams = [];
+    var remain_zhanshi = my_zhanshi.length;
+    for (let i=1;i<99;i++){
+        teams[i] = myCreeps.filter(creep=>creep.team == i)
+        remain_zhanshi = remain_zhanshi - teams[i].length
+        if(remain_zhanshi<=0){
+            break;
+        }
+    }
 
     // console.log(my_harvests)
-    var mySpawn = getObjectsByPrototype(StructureSpawn).filter(s=>s.my)[0];
+    var mySpawn = getObjectsByPrototype(StructureSpawn).find(s=>s.my);
     // 生产
     if(my_harvests.length<3){
         var hc=mySpawn.spawnCreep([CARRY,MOVE]).object
         if(hc){
-            console.log(hc)
             hc.zhiye = 'harvester'
         }
-    }else if(my_zhanshi.length<1){
-        var attacker = mySpawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK]).object
-        if(attacker){
-            attacker.zhiye = 'zhanshi'
-        }
-    }else{
-        var attacker = mySpawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK]).object
-        if(attacker){
-            attacker.zhiye = 'zhanshi'
+    }else{  // 生产战士，以team为单位，每个队伍4个战士
+        for(let i=1;i<=teams.length;i++){
+            
         }
     }
     // console.log('line 31')
@@ -68,8 +71,8 @@ export function loop() {
             }
         }else{
             let target_wall = findClosestByPath(zhanshi,enemy_walls)
-            if(zhanshi.attack(target) == ERR_NOT_IN_RANGE) {
-                zhanshi.moveTo(target);
+            if(zhanshi.attack(target_wall) == ERR_NOT_IN_RANGE) {
+                zhanshi.moveTo(target_wall);
             }
 
         }

@@ -145,6 +145,7 @@ declare module "game/prototypes" {
         /** Whether this creep is still being spawned */
         spawning: boolean;
         zhiye: string;
+        team: number;
 
         /**
          * Attack another creep or structure in a short-ranged attack. Requires the {@link ATTACK} body part

@@ -33,6 +33,7 @@ export function loop() {
         if (yx) {
             yx.zhiye = 'zhanshi'
             yx.bingzhong = 'youxia'
+            yx.taidu = 1
         }
     }
     // console.log('line 31')
@@ -79,13 +80,20 @@ export function loop() {
             target = findClosestByPath(youxia, enemy_walls)
         }
         let range = getRange(youxia, target)
-        if (range < 3) {
+        if (range <= 3) {
             console.log(youxia.rangedAttack(target))
-        } else {
+        } 
+        if(youxia.taidu>0 && range>3){
             youxia.moveTo(target)
         }
         youxia.heal(youxia)
         if (youxia.hits < 700) {
+            youxia.taidu = 0
+        }
+        if(youxia.hits>900){
+            youxia.taidu = 1
+        }
+        if (youxia.taidu<1 || range<2 ){
             youxia.moveTo(mySpawn)
         }
     }

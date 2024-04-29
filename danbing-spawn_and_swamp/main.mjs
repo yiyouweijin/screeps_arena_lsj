@@ -23,18 +23,20 @@ export function loop() {
     // console.log(my_harvests)
     var mySpawn = getObjectsByPrototype(StructureSpawn).find(s => s.my);
     // 生产
-    if (my_harvests.length < 3) {
+    if (my_harvests.length < 4) {
         var hc = mySpawn.spawnCreep([CARRY, MOVE]).object
         if (hc) {
             hc.zhiye = 'harvester'
         }
-    } else {  // 生产战士
-        var yx = mySpawn.spawnCreep([MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, HEAL]).object
+    } else if (my_youxia.length<30) {  // 生产战士
+        var yx = mySpawn.spawnCreep([MOVE, MOVE, MOVE, MOVE,RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, HEAL]).object
         if (yx) {
             yx.zhiye = 'zhanshi'
             yx.bingzhong = 'youxia'
             yx.taidu = 1
         }
+    }else{
+        // var nitouche = mySpawn.spawnCreep()
     }
     // console.log('line 31')
     // 采集能量
@@ -93,7 +95,7 @@ export function loop() {
         if(youxia.hits>900){
             youxia.taidu = 1
         }
-        if (youxia.taidu<1 || range<2 ){
+        if (youxia.taidu<1 || range<3 ){
             youxia.moveTo(mySpawn)
         }
     }

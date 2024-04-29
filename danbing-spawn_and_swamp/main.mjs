@@ -6,13 +6,17 @@ import {
     OwnedStructure, StructureTower, StructureRampart
 } from 'game/prototypes';
 import { MOVE, ATTACK, HEAL, RANGED_ATTACK, WORK, CARRY, RESOURCE_ENERGY, ERR_NOT_IN_RANGE } from 'game/constants';
+import { CostMatrix  } from 'game/path-finder';
 // import { } from 'arena';
+
 
 
 
 export function loop() {
     // Your code goes here
     console.log(getTicks())
+    let costs = new CostMatrix;
+    console.log(costs)
 
     var sources = getObjectsByPrototype(StructureContainer).filter(s => s.store.getUsedCapacity(RESOURCE_ENERGY) > 50);
     // console.log(sources)
@@ -59,19 +63,6 @@ export function loop() {
     // var targets = enemyCreeps.concat(enemystruct).concat(enemytower)
     var enemy_walls = getObjectsByPrototype(StructureRampart).filter(a => !a.my);
     my_all_youxia.doing(enemyCreeps, enemystruct, enemytower,enemy_walls,my_hurt_creeps)
-    // for(var zhanshi of my_zhanshi){
-    //     let target = findClosestByPath(zhanshi,targets)
-    //     if(target){
-    //         if(zhanshi.attack(target) == ERR_NOT_IN_RANGE) {
-    //             zhanshi.moveTo(target);
-    //         }
-    //     }else{
-    //         let target_wall = findClosestByPath(zhanshi,enemy_walls)
-    //         if(zhanshi.attack(target_wall) == ERR_NOT_IN_RANGE) {
-    //             zhanshi.moveTo(target_wall);
-    //         }
 
-    //     }
-    // }
 
 }

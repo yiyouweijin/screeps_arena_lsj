@@ -1,4 +1,4 @@
-import { findClosestByPath, getObjectsByPrototype, getTicks, getRange } from 'game/utils';
+import { findClosestByPath, getObjectsByPrototype, getTicks, getRange, findInRange } from 'game/utils';
 import {
     Creep, StructureSpawn, Source, StructureContainer, Structure,
     OwnedStructure, StructureTower, StructureRampart
@@ -19,6 +19,7 @@ export function loop() {
     var my_harvests = myCreeps.filter(creep => creep.zhiye == 'harvester');
     var my_zhanshi = myCreeps.filter(creep => creep.zhiye == 'zhanshi');
     var my_youxia = my_zhanshi.filter(creep => creep.bingzhong == 'youxia');
+    var my_hurt_creeps = myCreeps.filter(creep => (creep.hits<creep.hitsMax-30))
     // 所有战士都应该有自己的队伍，找到所有的队伍
     // console.log(my_harvests)
     var mySpawn = getObjectsByPrototype(StructureSpawn).find(s => s.my);
@@ -76,19 +77,35 @@ export function loop() {
     //     }
     // }
     for (var youxia of my_youxia) {
-        let target = findClosestByPath(youxia, targets)
-        if(!target){
+        let closest_target = findClosestByPath(youxia, targets)
+        if(!closest_target){
             // @ts-ignore
-            target = findClosestByPath(youxia, enemy_walls)
+            closest_target = findClosestByPath(youxia, enemy_walls)
         }
-        let range = getRange(youxia, target)
+        let range = getRange(youxia, closest_target)
+
+        if(youxia.hits <= youxia.hitsMax-30){
+            youxia.heal(youxia)
+        }else{
+            
+            let closest_my_hurt_creeps = findInRange(youxia, my_hurt_creeps, 1)
+            if(closest_my_hurt_creeps){
+                youxia.heal(closest_my_hurt_creeps[0])
+            }else{
+                let closest_my_hurt_creeps3 = findInRange(youxia, my_hurt_creeps, 3)
+                if(closest_my_hurt_creeps3){
+                    youxia.heal(closest_my_hurt_creeps3[0])
+                }else{
+                    youxia.heal(youxia)
+                }
+            }
+        }
         if (range <= 3) {
-            console.log(youxia.rangedAttack(target))
+            youxia.rangedAttack(closest_target)
         } 
         if(youxia.taidu>0 && range>3){
-            youxia.moveTo(target)
+            youxia.moveTo(closest_target)
         }
-        youxia.heal(youxia)
         if (youxia.hits < 700) {
             youxia.taidu = 0
         }

@@ -1,10 +1,10 @@
-import { findClosestByPath, getObjectsByPrototype, getTicks, getRange, findInRange } from 'game/utils';
+import { findClosestByPath, getObjectsByPrototype, getTicks, getRange, findInRange, getTerrainAt } from 'game/utils';
 import {
     Creep, StructureSpawn, Source, StructureContainer, Structure,
     OwnedStructure, StructureTower, StructureRampart
 } from 'game/prototypes';
-import { MOVE, ATTACK, HEAL, RANGED_ATTACK, WORK, CARRY, RESOURCE_ENERGY, ERR_NOT_IN_RANGE } from 'game/constants';
-
+import { MOVE, ATTACK, HEAL, RANGED_ATTACK, WORK, CARRY, RESOURCE_ENERGY, ERR_NOT_IN_RANGE, TERRAIN_WALL, TERRAIN_SWAMP } from 'game/constants';
+import { searchPath,CostMatrix } from 'game/path-finder';
 
 export class Youxias {
     /**
@@ -43,6 +43,22 @@ export class Youxias {
     doing(enemyCreeps, enemystructs, enemytowers,enemy_walls,my_hurt_creeps) {
         // @ts-ignore
         var targets = enemyCreeps.concat(enemystructs).concat(enemytowers)
+        var enemy_zhanshis = enemyCreeps.filter(creep => 
+            (creep.body.some(bodyPart => bodyPart.type == RANGED_ATTACK))||(creep.body.some(bodyPart => bodyPart.type == ATTACK)))
+        let costs = new CostMatrix;
+        for(let i=0;i<100;i++){
+            for(let j=0;j<100;j++){
+                let tile = getTerrainAt({x:i,y:j});
+                let weight =
+                tile === TERRAIN_WALL  ? 255 : // wall  => unwalkable
+                tile === TERRAIN_SWAMP ?   5 : // swamp => weight:  5
+                                           1 ; // plain => weight:  1
+                costs.set(i, j, weight);
+            }
+        }
+        for(let enemy_zhanshi of enemy_zhanshis){
+            
+        }
 
         for (var youxia of this.my_youxia) {
             let closest_target = findClosestByPath(youxia, targets)
@@ -81,7 +97,14 @@ export class Youxias {
                 youxia.taidu = 1
             }
             if (youxia.taidu < 1 || range < 3) {
-                youxia.moveTo(this.mySpawn)
+                // 逃跑
+                if(getRange(youxia,this.mySpawn)>8){
+                    // 如果在出生点外，就往家里跑
+                    youxia.moveTo(this.mySpawn)
+                }else{
+                    // 如果在出生点内，就往远离敌人的方向跑
+                    searchPath
+                }
             }
         }
     }

@@ -10,7 +10,7 @@ export class Harvest {
      * @param {Creep[]} myCreeps
      ** @param {StructureSpawn} mySpawn
      */
-    constructor(myCreeps, mySpawn, ) {
+    constructor(myCreeps, mySpawn,) {
         this.mySpawn = mySpawn;
         this.my_harvests = myCreeps.filter(creep => creep.zhiye == 'harvester');
         this.number = this.my_harvests.length;
@@ -19,16 +19,18 @@ export class Harvest {
 
     /**
      * @param {number} hopefule_number
+     * @param {StructureContainer[]} sources
      */
-    work(hopefule_number){
-        var sources = getObjectsByPrototype(StructureContainer).filter(s => s.store.getUsedCapacity(RESOURCE_ENERGY) > 5);
-        if (!findInRange(this.mySpawn,sources,6)){
-            hopefule_number = 0
-        }
-        if (this.my_harvests.length < hopefule_number) {
-            var hc = this.mySpawn.spawnCreep([CARRY, MOVE]).object
-            if (hc) {
-                hc.zhiye = 'harvester'
+    work(hopefule_number, sources) {
+        if (!this.mySpawn.spawning) {
+            if (!findInRange(this.mySpawn, sources, 6)) {
+                hopefule_number = 0
+            }
+            if (this.my_harvests.length < hopefule_number) {
+                var hc = this.mySpawn.spawnCreep([CARRY, MOVE]).object
+                if (hc) {
+                    hc.zhiye = 'harvester'
+                }
             }
         }
         // 采集能量

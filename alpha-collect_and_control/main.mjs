@@ -17,6 +17,8 @@ export function loop() {
     // 判断我的所有单位
     var myCreeps = getObjectsByPrototype(Creep).filter(creep => creep.my);
     var my_harvests = myCreeps.filter(creep => creep.zhiye == 'harvester');
+    var my_caijizhes = myCreeps.filter(creep => creep.zhiye == 'caijizhe');
+    var my_erchuanshou = myCreeps.find(creep => creep.zhiye == 'erchuanshou');
     var my_zhanshi = myCreeps.filter(creep => creep.zhiye == 'zhanshi');
     var my_hurt_creeps = myCreeps.filter(creep => (creep.hits < creep.hitsMax - 20))
     var my_carriers = myCreeps.filter(creep => creep.zhiye == 'carrier');
@@ -35,15 +37,20 @@ export function loop() {
     var my_all_youxia = new Youxias(my_zhanshi,mySpawns[0])
     
      // 生产
-     if (my_harvests.length < 1) {
-        var hc = mySpawns[0].spawnCreep([CARRY, MOVE,WORK,MOVE,WORK,WORK,MOVE]).object
+     if (my_caijizhes.length < 1) {
+        var hc = mySpawns[0].spawnCreep([CARRY, WORK,WORK,WORK,MOVE]).object
         if (hc) {
-            hc.zhiye = 'harvester'
+            hc.zhiye = 'caijizhe'
         }
-    }else if(my_harvests.length < 3){
-        var hc = mySpawns[0].spawnCreep([CARRY, MOVE,WORK,MOVE,WORK,WORK,MOVE,MOVE]).object
+    }else if(!my_erchuanshou){
+        var hc = mySpawns[0].spawnCreep([CARRY, MOVE]).object
         if (hc) {
-            hc.zhiye = 'harvester'
+            hc.zhiye = 'erchuanshou'
+        }
+    }else if(my_caijizhes.length < 2){
+        var hc = mySpawns[0].spawnCreep([CARRY, WORK,WORK,WORK,MOVE]).object
+        if (hc) {
+            hc.zhiye = 'caijizhe'
         }
     }else if(my_all_youxia.create(3)){
         if(my_carriers.length < 3){
@@ -54,20 +61,24 @@ export function loop() {
         }
     }
     my_all_youxia.create(30)
-    for (var my_harvest of my_harvests) {
-        if (my_harvest.store.getFreeCapacity(RESOURCE_ENERGY)) {
-            // find near container
-            let source = findClosestByPath(my_harvest, sources)
-            if (my_harvest.harvest(source) == ERR_NOT_IN_RANGE) {
-                my_harvest.moveTo(source);
+
+    for (var my_caijizhe of my_caijizhes) {
+
+            let source = findClosestByPath(my_caijizhe, sources)
+            if (my_caijizhe.harvest(source) == ERR_NOT_IN_RANGE) {   // 以后有心情再改成拉车到点位，现在就先move过去
+                my_caijizhe.moveTo(source)
             }
-        } else {
-            if (my_harvest.transfer(mySpawns[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                my_harvest.moveTo(mySpawns[0]);
-            }
+        my_caijizhe.transfer(my_erchuanshou, RESOURCE_ENERGY)
+    }
+    {  // 移动二传手
+        let X = mySpawns[0].x-1
+        let Y = mySpawns[0].y
+        if(my_erchuanshou){
+             my_erchuanshou.moveTo({x:X,y:Y})
+           
+            my_erchuanshou.transfer(mySpawns[0], RESOURCE_ENERGY)
         }
     }
-
 
     for(let my_carrier of my_carriers){
         

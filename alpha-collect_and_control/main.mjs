@@ -70,12 +70,11 @@ export function loop() {
             }
         my_caijizhe.transfer(my_erchuanshou, RESOURCE_ENERGY)
     }
-    {  // 移动二传手
+    {  // 移动 二传手
         let X = mySpawns[0].x-1
         let Y = mySpawns[0].y
         if(my_erchuanshou){
-             my_erchuanshou.moveTo({x:X,y:Y})
-           
+            my_erchuanshou.moveTo({x:X,y:Y})
             my_erchuanshou.transfer(mySpawns[0], RESOURCE_ENERGY)
         }
     }

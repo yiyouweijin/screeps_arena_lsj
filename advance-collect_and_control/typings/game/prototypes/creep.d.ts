@@ -147,6 +147,7 @@ declare module "game/prototypes" {
         zhiye: string;
         bingzhong: string;
         taidu: number;
+        resType: number;
 
         /**
          * Attack another creep or structure in a short-ranged attack. Requires the {@link ATTACK} body part

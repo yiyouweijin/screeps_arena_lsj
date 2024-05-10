@@ -44,8 +44,8 @@ export class Youxias {
         // @ts-ignore
         var targets = enemyCreeps
 
-        if(!enemyCreeps){
-            if(!enemystructs){
+        if(enemyCreeps.length==0){
+            if(enemystructs.length==0){
                 console.log('no enemy')
                 return 0
             }

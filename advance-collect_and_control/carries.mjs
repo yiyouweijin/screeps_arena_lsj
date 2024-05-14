@@ -30,7 +30,7 @@ export class Carries {
         if(t1 == Math.min(t1,t2,t3)){type = 1}
         else if(t2 == Math.min(t1,t2,t3)){type = 2}
         if (this.number < mubiao_number) {
-            var hc = this.mySpawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,HEAL]).object
+            var hc = this.mySpawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,MOVE, MOVE,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,HEAL]).object
             if (hc) {
                 hc.zhiye = 'carrier'
                 hc.taidu = 0
